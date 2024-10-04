@@ -42,3 +42,8 @@ button {
     padding: 10px 20px;
     cursor: pointer;
 }
+
+#loading-indicator {
+    margin-top: 10px;
+    font-weight: bold;
+}

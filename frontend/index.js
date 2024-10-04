@@ -3,6 +3,7 @@ import { backend } from 'declarations/backend';
 const canvasContainer = document.getElementById('canvas-container');
 const startButton = document.getElementById('start-game');
 const scoreList = document.getElementById('score-list');
+const loadingIndicator = document.getElementById('loading-indicator');
 
 let dosBoxInstance = null;
 
@@ -10,6 +11,9 @@ startButton.addEventListener('click', startGame);
 
 async function startGame() {
     try {
+        loadingIndicator.style.display = 'block';
+        startButton.disabled = true;
+
         if (dosBoxInstance) {
             dosBoxInstance.exit();
         }
@@ -22,7 +26,10 @@ async function startGame() {
 
         dosBoxInstance = ci;
 
-        await ci.run("https://cdn.dos.zone/custom/dos/quake.jsdos");
+        await ci.archive("https://cdn.dos.zone/custom/dos/quake.jsdos");
+
+        loadingIndicator.style.display = 'none';
+        startButton.disabled = false;
 
         // Add event listener for game over (you may need to implement this based on the game's behavior)
         // For demonstration, we'll use a timeout to simulate game over after 5 minutes
@@ -36,6 +43,8 @@ async function startGame() {
     } catch (error) {
         console.error("Error starting game:", error);
         alert("Failed to start the game. Please try again.");
+        loadingIndicator.style.display = 'none';
+        startButton.disabled = false;
     }
 }
 
