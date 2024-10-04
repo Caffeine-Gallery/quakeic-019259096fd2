@@ -1,0 +1,7 @@
+service : {
+  addScore: (text, int) -> ();
+  getHighScores: () -> (vec record {
+                              text;
+                              int;
+                            }) query;
+}
