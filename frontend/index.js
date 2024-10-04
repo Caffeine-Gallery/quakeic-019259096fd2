@@ -22,12 +22,7 @@ async function startGame() {
 
         dosBoxInstance = ci;
 
-        await ci.dosboxDirect([
-            "MOUNT C .",
-            "C:",
-            "CD QUAKE",
-            "QUAKE.EXE"
-        ]);
+        await ci.run("https://cdn.dos.zone/custom/dos/quake.jsdos");
 
         // Add event listener for game over (you may need to implement this based on the game's behavior)
         // For demonstration, we'll use a timeout to simulate game over after 5 minutes
