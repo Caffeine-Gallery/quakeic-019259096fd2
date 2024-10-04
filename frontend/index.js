@@ -35,9 +35,7 @@ async function startGame() {
 
         dosboxInstance = ci;
 
-        await ci.dosboxDisk.createFromUrl("https://cdn.dos.zone/custom/dos/quake.jsdos", "quake.jsdos");
-        await ci.mount("quake.jsdos");
-        await ci.dos.run("QUAKE.EXE");
+        await ci.run("https://cdn.dos.zone/custom/dos/quake.jsdos");
 
         loadingIndicator.style.display = 'none';
         startButton.disabled = false;
