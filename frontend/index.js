@@ -27,13 +27,17 @@ async function startGame() {
             await dosboxInstance.exit();
         }
 
-        dosboxInstance = await Dos(canvasContainer, {
+        const ci = await Dos(canvasContainer, {
             wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js",
             cycles: "auto",
             autolock: false,
         });
 
-        await dosboxInstance.run("https://cdn.dos.zone/custom/dos/quake.jsdos");
+        dosboxInstance = ci;
+
+        await ci.dosboxDisk.createFromUrl("https://cdn.dos.zone/custom/dos/quake.jsdos", "quake.jsdos");
+        await ci.mount("quake.jsdos");
+        await ci.dos.run("QUAKE.EXE");
 
         loadingIndicator.style.display = 'none';
         startButton.disabled = false;
