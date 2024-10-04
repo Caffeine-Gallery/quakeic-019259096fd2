@@ -9,7 +9,7 @@ let dosPlayer = null;
 
 // Wait for js-dos to load
 window.addEventListener('load', () => {
-    if (window.DosPlayer) {
+    if (window.Dos) {
         startButton.disabled = false;
     } else {
         console.error("js-dos failed to load");
@@ -28,14 +28,13 @@ async function startGame() {
             dosPlayer.exit();
         }
 
-        dosPlayer = new DosPlayer(canvasContainer, {
+        dosPlayer = await Dos(canvasContainer, {
             wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js",
             cycles: "auto",
             autolock: false,
         });
 
-        await dosPlayer.load("https://cdn.dos.zone/custom/dos/quake.jsdos");
-        await dosPlayer.run();
+        await dosPlayer.run("https://cdn.dos.zone/custom/dos/quake.jsdos");
 
         loadingIndicator.style.display = 'none';
         startButton.disabled = false;
