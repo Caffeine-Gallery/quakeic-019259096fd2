@@ -9,44 +9,64 @@ let dosBoxInstance = null;
 startButton.addEventListener('click', startGame);
 
 async function startGame() {
-    if (dosBoxInstance) {
-        dosBoxInstance.exit();
-    }
-
-    const ci = await Dos(canvasContainer, {
-        wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js",
-        cycles: "auto",
-        autolock: false,
-    });
-
-    dosBoxInstance = ci;
-
-    await ci.run("https://cdn.dos.zone/custom/dos/quake.jsdos");
-
-    // Add event listener for game over (you may need to implement this based on the game's behavior)
-    // For demonstration, we'll use a timeout to simulate game over after 5 minutes
-    setTimeout(() => {
-        const playerName = prompt("Game Over! Enter your name:");
-        const score = Math.floor(Math.random() * 1000); // Replace with actual score
-        if (playerName) {
-            addScore(playerName, score);
+    try {
+        if (dosBoxInstance) {
+            dosBoxInstance.exit();
         }
-    }, 300000);
+
+        const ci = await Dos(canvasContainer, {
+            wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js",
+            cycles: "auto",
+            autolock: false,
+        });
+
+        dosBoxInstance = ci;
+
+        await ci.dosboxDirect([
+            "MOUNT C .",
+            "C:",
+            "CD QUAKE",
+            "QUAKE.EXE"
+        ]);
+
+        // Add event listener for game over (you may need to implement this based on the game's behavior)
+        // For demonstration, we'll use a timeout to simulate game over after 5 minutes
+        setTimeout(() => {
+            const playerName = prompt("Game Over! Enter your name:");
+            const score = Math.floor(Math.random() * 1000); // Replace with actual score
+            if (playerName) {
+                addScore(playerName, score);
+            }
+        }, 300000);
+    } catch (error) {
+        console.error("Error starting game:", error);
+        alert("Failed to start the game. Please try again.");
+    }
 }
 
 async function addScore(name, score) {
-    await backend.addScore(name, score);
-    await updateHighScores();
+    try {
+        await backend.addScore(name, score);
+        await updateHighScores();
+    } catch (error) {
+        console.error("Error adding score:", error);
+        alert("Failed to add score. Please try again.");
+    }
 }
 
 async function updateHighScores() {
-    const scores = await backend.getHighScores();
-    scoreList.innerHTML = '';
-    scores.forEach(([name, score]) => {
-        const li = document.createElement('li');
-        li.textContent = `${name}: ${score}`;
-        scoreList.appendChild(li);
-    });
+    try {
+        const scores = await backend.getHighScores();
+        scoreList.innerHTML = '';
+        scores.forEach(([name, score]) => {
+            const li = document.createElement('li');
+            li.textContent = `${name}: ${score}`;
+            scoreList.appendChild(li);
+        });
+    } catch (error) {
+        console.error("Error updating high scores:", error);
+        alert("Failed to update high scores. Please refresh the page.");
+    }
 }
 
 updateHighScores();
