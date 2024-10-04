@@ -5,7 +5,7 @@ const startButton = document.getElementById('start-game');
 const scoreList = document.getElementById('score-list');
 const loadingIndicator = document.getElementById('loading-indicator');
 
-let dosPlayer = null;
+let dosInstance = null;
 
 // Wait for js-dos to load
 window.addEventListener('load', () => {
@@ -24,17 +24,20 @@ async function startGame() {
         loadingIndicator.style.display = 'block';
         startButton.disabled = true;
 
-        if (dosPlayer) {
-            dosPlayer.exit();
+        if (dosInstance) {
+            await dosInstance.exit();
         }
 
-        dosPlayer = await Dos(canvasContainer, {
+        const ci = await Dos(canvasContainer, {
             wdosboxUrl: "https://js-dos.com/6.22/current/wdosbox.js",
             cycles: "auto",
             autolock: false,
         });
 
-        await dosPlayer.run("https://cdn.dos.zone/custom/dos/quake.jsdos");
+        dosInstance = ci;
+
+        await ci.mount("https://cdn.dos.zone/custom/dos/quake.jsdos");
+        await ci.run();
 
         loadingIndicator.style.display = 'none';
         startButton.disabled = false;
